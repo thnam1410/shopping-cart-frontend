@@ -1,0 +1,22 @@
+.product {
+    &__header {
+        background-color: pink;
+        display: flex;
+        align-items: center;
+
+        padding: 25px 60px;
+
+        &--title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        &--filter {
+            margin-left: auto;
+        }
+    }
+
+    &__content {
+        padding: 20px 10px;
+    }
+}

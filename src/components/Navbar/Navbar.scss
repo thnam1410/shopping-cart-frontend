@@ -1,0 +1,73 @@
+@import "../../scss/mixins.scss";
+.navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    max-height: 10vh;
+    min-height: 10vh;
+    &__title {
+        flex: 0.3 0 0;
+        margin: 0 10px;
+        max-width: 100px;
+
+        order: 1;
+        &--button {
+            color: white !important;
+            font-size: 16px !important;
+            font-weight: 700 !important;
+        }
+    }
+    &__appbar {
+        background: black !important;
+        padding: 10px 5px;
+    }
+
+    &__content {
+        @include flex-center;
+
+        flex: 1 0 0;
+        width: 100%;
+
+        order: 2;
+    }
+}
+.menu {
+    &__item {
+        margin-left: 5rem !important;
+        color: white !important;
+
+        &--buttontext {
+            font-weight: 700;
+        }
+    }
+    &__icons {
+        @include flex-center;
+        justify-content: flex-end;
+
+        flex: 0.3 0 0;
+        margin: 0 15px;
+        order: 3;
+
+        & * {
+            margin: 0 5px;
+        }
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .navbar {
+        &__title--button {
+            justify-content: flex-start !important;
+            flex-grow: 1;
+        }
+        &__content {
+            flex-grow: 0;
+            justify-content: flex-end;
+            order: 3;
+        }
+    }
+    .menu__icons {
+        order: 2;
+    }
+}

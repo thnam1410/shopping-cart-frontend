@@ -1,0 +1,65 @@
+.drawer {
+    max-width: 500px;
+    min-width: 400px;
+
+    &__header {
+        display: flex;
+        align-items: center;
+
+        padding: 10px 25px;
+        margin-bottom: 20px;
+    }
+
+    .cart__item {
+        display: flex;
+        align-items: center;
+
+        .item {
+            &__avatar {
+                padding: 10px 15px;
+            }
+            &__informations {
+                flex-grow: 1;
+
+                padding: 5px 15px;
+
+                & > div {
+                    padding: 2px 10px;
+                }
+            }
+            &__removebutton {
+                padding: 0 20px;
+            }
+            &__informations-price {
+                padding: 5px 0;
+                .item__count {
+                    padding: 3px 5px;
+                    margin-right: 10px;
+                    background-color: #8a858524;
+                }
+            }
+            &__removebutton {
+                cursor: pointer;
+            }
+        }
+    }
+    .MuiButtonBase-root {
+        margin-left: auto;
+    }
+    .MuiIconButton-root {
+        color: black;
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        padding: 15px 20px;
+
+        .amount {
+            text-align: right;
+            flex-grow: 1;
+        }
+    }
+}
