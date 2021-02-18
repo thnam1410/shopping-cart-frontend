@@ -23,7 +23,8 @@ function ShoppingCart() {
           <Route exact path="/login" component={Login} />
           <Route exact path="/admin" component={AdminPage} />
           <Route component={MainRoutes} />
-          <Route path="/404" component={NotFound} />
+          {/* <Route  component={NotFound} /> */}
+
         </Switch>
       </Router>
     </div>
@@ -37,6 +38,9 @@ const MainRoutes = () => (
     <Route exact path="/about" component={About} />
     <Route exact path="/product" component={Products} />
     <Route path="/product/:productId" component={ProductItem} />
+              <Route  component={NotFound} />
+
+
 
     {/* <Redirect to="/404" /> */}
   </>
