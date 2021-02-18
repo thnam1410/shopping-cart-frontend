@@ -39,14 +39,13 @@ function ProductItem({ location }) {
         setCurrentSizeChoose(index);
     };
 
-    // console.log(typeof product.sizes);
-    // console.log(product.sizes);
-    console.log(routeParams);
+
+    // console.log(routeParams);
 
     if (!product) {
-        
+        return <div>Loading </div>
     }
-    return product ? (
+    return (
         <>
             <Container maxWidth="xl" className="product">
                 {/* Image Side */}
@@ -87,29 +86,29 @@ function ProductItem({ location }) {
                             <div className="product__size">
                                 {
                                     // console.log(typeof product.sizes)
-                                    // product.size.map((item, index) => (
-                                    //     <Button
-                                    //         variant="contained"
-                                    //         key={index}
-                                    //         onClick={() => {
-                                    //             handleOnClickSize(index);
-                                    //         }}
-                                    //         style={
-                                    //             index === currentSizeChoose
-                                    //                 ? {
-                                    //                       backgroundColor:
-                                    //                           "#000",
-                                    //                       color: "#fff",
-                                    //                   }
-                                    //                 : {
-                                    //                       backgroundColor:
-                                    //                           "#fff",
-                                    //                       color: "#000",
-                                    //                   }
-                                    //         }>
-                                    //         {item}
-                                    //     </Button>
-                                    // ))
+                                    product.sizes.map((item, index) => (
+                                        <Button
+                                            variant="contained"
+                                            key={index}
+                                            onClick={() => {
+                                                handleOnClickSize(index);
+                                            }}
+                                            style={
+                                                index === currentSizeChoose
+                                                    ? {
+                                                          backgroundColor:
+                                                              "#000",
+                                                          color: "#fff",
+                                                      }
+                                                    : {
+                                                          backgroundColor:
+                                                              "#fff",
+                                                          color: "#000",
+                                                      }
+                                            }>
+                                            {item}
+                                        </Button>
+                                    ))
                                 }
                             </div>
                             <div className="product__counter">
@@ -152,9 +151,9 @@ function ProductItem({ location }) {
                 </Grid>
             </Container>
         </>
-    ) : (
-        <div> Loadiing</div>
-    );
+    )
+        
+    
 }
 
 export default withRouter(ProductItem);
