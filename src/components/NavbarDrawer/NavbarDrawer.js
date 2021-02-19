@@ -18,11 +18,6 @@ export function NavbarDrawerSearchBar() {
 }
 
 export function NavbarDrawerCart({ itemList, onClickRemoveItemFromCart }) {
-    // console.log(itemList);
-
-    // const handleOnClickRemoveItemFromCart = (index) => {
-    //     newItemList.splice(index, 1);
-    // };
     const getTotalAmount = () => {
         return itemList.reduce((acc, item) => {
             const { price, count } = item;

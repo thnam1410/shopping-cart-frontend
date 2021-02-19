@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addNewItemToCart } from "../../actions/cart";
 import { withRouter } from "react-router-dom";
 import { fakeListItem } from "../../data";
+import { Suspense } from "react";
 
 function Products({ history }) {
     const [anchorElFilter, setAnchorElFilter] = useState(null);
@@ -29,10 +30,6 @@ function Products({ history }) {
         setFilterProducts(event.target.value);
     };
 
-    const handleAddToCartItem = (item) => {
-        const action = addNewItemToCart(item);
-        dispatch(action);
-    };
     const handleOnClickProduct = (item) => {
         const { id } = item;
         history.push(`/product/${id}`);
@@ -130,14 +127,15 @@ function Products({ history }) {
                                     sm={6}
                                     md={3}
                                     lg={2}>
-                                    <ProductCard
-                                        name={name}
-                                        price={price}
-                                        image={image}
-                                        onClick={() => {
-                                            handleOnClickProduct(item);
-                                        }}
-                                    />
+                                    
+                                        <ProductCard
+                                            name={name}
+                                            price={price}
+                                            image={image}
+                                            onClick={() => {
+                                                handleOnClickProduct(item);
+                                            }}
+                                        />
                                 </Grid>
                             );
                         })}

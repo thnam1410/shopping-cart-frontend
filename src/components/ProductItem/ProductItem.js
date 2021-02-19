@@ -6,6 +6,8 @@ import image from "../../static/img/img01.jpg";
 import { Button, Typography } from "@material-ui/core";
 import { useParams, withRouter } from "react-router-dom";
 import { fakeListItem } from "../../data";
+import { addNewItemToCart } from "../../actions/cart";
+import { useDispatch } from "react-redux";
 
 function ProductItem({ location }) {
     const [activeImage, setActiveImage] = useState(0);
@@ -13,10 +15,9 @@ function ProductItem({ location }) {
     const [currentSizeChoose, setCurrentSizeChoose] = useState(0);
     const [product, setProduct] = useState();
     const routeParams = useParams();
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        // const path = location.pathname;
-        // const _product = path.match(new RegExp("/product/([^/]+)"))[1];
         const data = fakeListItem.filter(
             (x) => x.id == routeParams.productId
         )[0];
@@ -39,13 +40,12 @@ function ProductItem({ location }) {
         setCurrentSizeChoose(index);
     };
 
+    const handleAddToCartItem = (item) => {
+        const action = addNewItemToCart(item);
+        dispatch(action);
+    };
 
-    // console.log(routeParams);
-
-    if (!product) {
-        return <div>Loading </div>
-    }
-    return (
+    return product ? (
         <>
             <Container maxWidth="xl" className="product">
                 {/* Image Side */}
@@ -143,7 +143,11 @@ function ProductItem({ location }) {
                                     +
                                 </Button>
                             </div>
-                            <Button className="btn__addtocart">
+                            <Button
+                                className="btn__addtocart"
+                                onClick={() => {
+                                    handleAddToCartItem(product);
+                                }}>
                                 Add To Cart
                             </Button>
                         </div>
@@ -151,9 +155,9 @@ function ProductItem({ location }) {
                 </Grid>
             </Container>
         </>
-    )
-        
-    
+    ) : (
+        <div>loading...</div>
+    );
 }
 
 export default withRouter(ProductItem);
