@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const FormHeader = ({ children, ...props }) => {
+export const FormTitle = ({ children, ...props }) => {
     const styles = useStyles();
     return (
         <Typography className={styles.root} {...props}>

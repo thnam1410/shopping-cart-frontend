@@ -23,11 +23,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function ProductCard({ image, name, price, onClick }) {
+function ProductCard({ image, name, price, onClick, sizes }) {
+    console.log(sizes);
     return (
         <Card className="card" onClick={onClick}>
             <CardActionArea>
-                <CardHeader className="card__header" title="Out of Stock" />
+                <CardHeader className="card__header" title={sizes.every(({quantity}) => parseInt(quantity) === 0) ? "Out Of Stock" :""} />
                 <CardMedia
                     className="card__image"
                     image={image}

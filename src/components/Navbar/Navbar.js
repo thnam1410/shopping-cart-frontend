@@ -104,7 +104,8 @@ const Navbar = ({ location, history }) => {
         setCurrentDrawerClick("cart");
         toggleDrawer("right", true)();
     };
-    return (
+    return location.pathname.startsWith("/login") ||
+        location.pathname.startsWith("/admin") ? null : (
         <>
             <div className="navbar">
                 <AppBar className="navbar__appbar" position="static">
@@ -139,18 +140,17 @@ const Navbar = ({ location, history }) => {
                                         }}
                                         open={open}
                                         onClose={() => setAnchorEl(null)}>
-                                        <MenuItem
-                                            onClick={() =>
-                                                handleMenuIcon("/product")
-                                            }>
-                                            Products
-                                        </MenuItem>
-                                        <MenuItem
-                                            onClick={() =>
-                                                handleMenuIcon("/about")
-                                            }>
-                                            About
-                                        </MenuItem>
+                                        {buttonMenu.map((item, id) => {
+                                            const { title, url } = item;
+                                            return (
+                                                <MenuItem
+                                                    onClick={() =>
+                                                        handleMenuIcon(`${url}`)
+                                                    }>
+                                                    {title}
+                                                </MenuItem>
+                                            );
+                                        })}
                                     </Menu>
                                 </>
                             ) : (

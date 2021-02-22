@@ -3,11 +3,20 @@
 .product {
     height: auto;
     padding-top: 50px;
-    .main-image {
+    .main-image-wrapper {
+        @include flex-center;
+        height: 100%;
         width: 100%;
+        max-height: 800px;
+    }
+    .main-image {
+        display: block;
+        max-width: 750px;
+        max-height: 750px;
         height: auto;
+        width: 50%;
 
-        object-fit: cover;
+        object-fit: contain;
     }
     .images-slide {
         @include flex-center;

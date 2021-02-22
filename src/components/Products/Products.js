@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Products.scss";
 import {
     FormControl,
@@ -16,24 +16,31 @@ import ProductCard from "../ProductCard/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewItemToCart } from "../../actions/cart";
 import { withRouter } from "react-router-dom";
-import { fakeListItem } from "../../data";
-import { Suspense } from "react";
+import axios from "axios";
+import axiosClient from "../../api/axiosClient";
 
 function Products({ history }) {
     const [anchorElFilter, setAnchorElFilter] = useState(null);
     const [filterProducts, setFilterProducts] = useState(null);
-    const dispatch = useDispatch();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+
+    const [allProductItems, setAllProductItems] = useState([]);
 
     const handleOnChangeFilter = (event) => {
         setFilterProducts(event.target.value);
     };
 
-    const handleOnClickProduct = (item) => {
-        const { id } = item;
-        history.push(`/product/${id}`);
+    const handleOnClickProduct = (name) => {
+        // history.push(`/product/${name.split(" ").join("-")}`);
+        history.push(`/product/${name}`);
     };
+
+    useEffect(() => {
+        axiosClient.get("/product").then((res) => {
+            setAllProductItems(res);
+        });
+    }, []);
     return (
         <div className="product">
             {/* Header */}
@@ -114,34 +121,38 @@ function Products({ history }) {
             </div>
 
             {/* Content */}
-            <div className="product__content">
-                <Container maxWidth="xl">
-                    <Grid container spacing={6}>
-                        {fakeListItem.map((item, index) => {
-                            const { name, price, image } = item;
-                            return (
-                                <Grid
-                                    key={index}
-                                    item
-                                    xs={12}
-                                    sm={6}
-                                    md={3}
-                                    lg={2}>
-                                    
+            {allProductItems ? (
+                <div className="product__content">
+                    <Container maxWidth="xl">
+                        <Grid container spacing={6}>
+                            {allProductItems.map((item, index) => {
+                                const { _id, name, price, mainImage, sizes } = item;
+                                return (
+                                    <Grid
+                                        key={index}
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        md={3}
+                                        lg={2}>
                                         <ProductCard
                                             name={name}
                                             price={price}
-                                            image={image}
+                                            image={`${process.env.REACT_APP_API_URL}${mainImage}`}
+                                            sizes={sizes}
                                             onClick={() => {
-                                                handleOnClickProduct(item);
+                                                handleOnClickProduct(_id);
                                             }}
                                         />
-                                </Grid>
-                            );
-                        })}
-                    </Grid>
-                </Container>
-            </div>
+                                    </Grid>
+                                );
+                            })}
+                        </Grid>
+                    </Container>
+                </div>
+            ) : (
+                "Loading..."
+            )}
 
             {/* Footer */}
             <div className="product__footer">Footer</div>
