@@ -16,7 +16,6 @@ import ProductCard from "../ProductCard/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewItemToCart } from "../../actions/cart";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
 import axiosClient from "../../api/axiosClient";
 
 function Products({ history }) {

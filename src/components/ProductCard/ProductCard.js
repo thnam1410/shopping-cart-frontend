@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ProductCard({ image, name, price, onClick, sizes }) {
-    console.log(sizes);
     return (
         <Card className="card" onClick={onClick}>
             <CardActionArea>

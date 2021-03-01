@@ -1,11 +1,12 @@
+@import "../../scss/mixins.scss";
 .drawer {
     max-width: 500px;
-    min-width: 400px;
+    min-width: 350px;
 
     &__header {
         display: flex;
         align-items: center;
-
+        justify-content: space-between;
         padding: 10px 25px;
         margin-bottom: 20px;
     }
@@ -43,9 +44,6 @@
             }
         }
     }
-    .MuiButtonBase-root {
-        margin-left: auto;
-    }
     .MuiIconButton-root {
         color: black;
     }
@@ -60,6 +58,15 @@
         .amount {
             text-align: right;
             flex-grow: 1;
+        }
+    }
+    .drawer__checkout {
+        width: 100%;
+        @include flex-center;
+
+        .btn__checkout {
+            padding: 10px 15px;
+            border-radius: 15px;
         }
     }
 }

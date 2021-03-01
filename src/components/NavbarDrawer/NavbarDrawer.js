@@ -8,6 +8,7 @@ import {
 import React from "react";
 import "./NavbarDrawer.scss";
 import CloseIcon from "@material-ui/icons/Close";
+import { useHistory } from "react-router-dom";
 
 export function NavbarDrawerSearchBar() {
     return (
@@ -17,11 +18,16 @@ export function NavbarDrawerSearchBar() {
     );
 }
 
-export function NavbarDrawerCart({ itemList, onClickRemoveItemFromCart }) {
+export function NavbarDrawerCart({
+    itemList,
+    onClickRemoveItemFromCart,
+    toggleDrawer,
+}) {
+    let history = useHistory();
     const getTotalAmount = () => {
         return itemList.reduce((acc, item) => {
-            const { price, count } = item;
-            return (acc += price * count);
+            const { price, quantity } = item;
+            return (acc += price * quantity);
         }, 0);
     };
     return (
@@ -29,7 +35,7 @@ export function NavbarDrawerCart({ itemList, onClickRemoveItemFromCart }) {
             {/* Header */}
             <div className="drawer__header">
                 <h2>Cart</h2>
-                <IconButton>
+                <IconButton onClick={toggleDrawer("right", false)}>
                     <CloseIcon style={{ fontSize: 35 }} />
                 </IconButton>
             </div>
@@ -37,13 +43,13 @@ export function NavbarDrawerCart({ itemList, onClickRemoveItemFromCart }) {
             {/* Body */}
             <div className="drawer__body">
                 {itemList.map((item, index) => {
-                    const { name, price, image, count } = item;
+                    const { name, size, price, quantity, img } = item;
                     return (
                         <div className="cart__item" key={index}>
                             <div className="item__avatar">
                                 <Avatar
                                     alt="item"
-                                    src="../../static/img/img01.jpg"
+                                    src={`${process.env.REACT_APP_API_URL}${img}`}
                                 />
                             </div>
                             <div className="item__informations">
@@ -51,11 +57,16 @@ export function NavbarDrawerCart({ itemList, onClickRemoveItemFromCart }) {
                                     {name}
                                 </div>
                                 <div className="item__informations-size">
-                                    36
+                                    {size}
                                 </div>
                                 <div className="item__informations-price">
-                                    <span className="item__count">{count}</span>
-                                    {price}
+                                    <span className="item__count">
+                                        {quantity}
+                                    </span>
+                                    {price.toLocaleString("it-IT", {
+                                        style: "currency",
+                                        currency: "VND",
+                                    })}
                                 </div>
                             </div>
                             <div className="item__removebutton">
@@ -74,7 +85,23 @@ export function NavbarDrawerCart({ itemList, onClickRemoveItemFromCart }) {
             {/* Footer */}
             <div className="drawer__footer">
                 <Typography variant="h5">Total</Typography>
-                <Typography className="amount">{getTotalAmount()}</Typography>
+                <Typography className="amount">
+                    {getTotalAmount().toLocaleString("it-IT", {
+                        style: "currency",
+                        currency: "VND",
+                    })}
+                </Typography>
+            </div>
+            <div className="drawer__checkout">
+                <Button
+                    className="btn__checkout"
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => {
+                        history.push("/checkout");
+                    }}>
+                    Check Out
+                </Button>
             </div>
         </div>
     );

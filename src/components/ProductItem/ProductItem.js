@@ -9,25 +9,28 @@ import { addNewItemToCart } from "../../actions/cart";
 import { useDispatch } from "react-redux";
 import axiosClient from "../../api/axiosClient";
 
-function ProductItem({ location }) {
+function ProductItem({ history }) {
     const [activeImage, setActiveImage] = useState(0);
     const [countItem, setCountItem] = useState(1);
-    const [currentSizeChoose, setCurrentSizeChoose] = useState(null);
+    const [currentSizeChoose, setCurrentSizeChoose] = useState(0);
     const [currentMainImage, setCurrentMainImage] = useState(null);
     const [product, setProduct] = useState([]);
     const routeParams = useParams();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        console.log("use effect");
         const { productId } = routeParams;
-        axiosClient
-            .get(`/product/${productId}`)
-            .then((res) => {
-                console.log(res);
-                setProduct(res);
-            })
-            .catch((err) => console.log(err));
+        const fetchData = async () => {
+            try{
+                const data = await axiosClient.get(`/product/${productId}`).catch((err) => {throw err})
+                setProduct(data)
+                setCurrentSizeChoose(data.sizes[0].size)
+            }catch(e){
+                alert('Can not found Product')
+                history.push('/')
+            }
+        }
+        fetchData()
     }, [routeParams]);
 
     const handleOnClickImg = (index, path) => {
@@ -43,51 +46,63 @@ function ProductItem({ location }) {
         setCountItem(countItem + 1);
     };
 
-    const handleOnClickSize = (index) => {
-        setCurrentSizeChoose(index);
+    const handleOnClickSize = (size) => {
+        setCurrentSizeChoose(size);
     };
 
-    const handleAddToCartItem = (item) => {
+    const handleAddToCartItem = () => {
+        const item = {
+            name: product.name,
+            price: product.price,
+            size: currentSizeChoose,
+            quantity: countItem,
+            img: product.mainImage
+
+        }
         const action = addNewItemToCart(item);
         dispatch(action);
     };
-    return product.length !== 0 ? (
+    return Object.keys(product).length === 0 || product.length === 0  ? (
+        <div>loading...</div>
+    ):(
         <>
             <Container maxWidth="xl" className="product">
                 {/* Image Side */}
                 <Grid container>
-                    <Grid container xs={12} sm={12} md={6} lg={6}>
-                        <div className="main-image-wrapper">
-                            <img
-                                className="main-image"
-                                alt="productItem"
-                                src={
-                                    currentMainImage ??
-                                    `${process.env.REACT_APP_API_URL}${product.mainImage}`
-                                }
-                            />
-                        </div>
-                        <div className="images-slide">
-                            {product.subImages &&
-                                [
-                                    ...product.subImages,
-                                    product.mainImage,
-                                ].map((path, index) => (
-                                    <img
-                                        alt="Slide Images"
-                                        key={index}
-                                        className={
-                                            "images-slide__img " +
-                                            (index === activeImage
-                                                ? "images-slide__active"
-                                                : "")
-                                        }
-                                        src={`${process.env.REACT_APP_API_URL}${path}`}
-                                        onClick={() =>
-                                            handleOnClickImg(index, path)
-                                        }
-                                    />
-                                ))}
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                        <div className="left-wrapper">
+                            <div className="img-wrapper">
+                                <img
+                                    className="main-image"
+                                    alt="productItem"
+                                    src={
+                                        currentMainImage ??
+                                        `${process.env.REACT_APP_API_URL}${product.mainImage}`
+                                    }
+                                />
+                            </div>
+                            <div className="images-slide">
+                                {product.subImages &&
+                                    [
+                                        ...product.subImages,
+                                        product.mainImage,
+                                    ].map((path, index) => (
+                                        <img
+                                            alt="Slide Images"
+                                            key={index}
+                                            className={
+                                                "images-slide__img " +
+                                                (index === activeImage
+                                                    ? "images-slide__active"
+                                                    : "")
+                                            }
+                                            src={`${process.env.REACT_APP_API_URL}${path}`}
+                                            onClick={() =>
+                                                handleOnClickImg(index, path)
+                                            }
+                                        />
+                                    ))}
+                            </div>
                         </div>
                     </Grid>
 
@@ -98,19 +113,20 @@ function ProductItem({ location }) {
                                 {product.name}
                             </Typography>
                             <Typography className="product__price" variant="h5">
-                                {product.price}
+                                {product.price.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})}
                             </Typography>
                             <div className="product__size">
-                                {product.sizes.map(
-                                    ({ size, quantity }, index) => (
+                                { product.sizes !== 0 ?
+                                    (product.sizes.sort((a, b) => a.size - b.size)
+                                    .map(({ size, quantity }, index) => (
                                         <Button
                                             variant="contained"
                                             key={index}
                                             onClick={() => {
-                                                handleOnClickSize(index);
+                                                handleOnClickSize(size);
                                             }}
                                             style={
-                                                index === currentSizeChoose
+                                                size === currentSizeChoose
                                                     ? {
                                                           backgroundColor:
                                                               "#000",
@@ -129,8 +145,7 @@ function ProductItem({ location }) {
                                             }>
                                             {size}
                                         </Button>
-                                    )
-                                )}
+                                    ))) : ''}
                             </div>
                             <div className="product__counter">
                                 <Button
@@ -167,7 +182,7 @@ function ProductItem({ location }) {
                             <Button
                                 className="btn__addtocart"
                                 onClick={() => {
-                                    handleAddToCartItem(product);
+                                    handleAddToCartItem();
                                 }}>
                                 Add To Cart
                             </Button>
@@ -176,9 +191,7 @@ function ProductItem({ location }) {
                 </Grid>
             </Container>
         </>
-    ) : (
-        <div>loading...</div>
-    );
+    )
 }
 
 export default withRouter(ProductItem);

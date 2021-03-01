@@ -28,6 +28,24 @@ const buttonMenu = [
     { title: "Product", url: "/product" },
     { title: "About", url: "/about" },
 ];
+export const processReduceCartItems = (itemList) => {
+    return itemList.reduce((acc, item) => {
+        let found = false;
+
+        for (let i = 0; i < acc.length; i++) {
+            if (acc[i].name === item.name && acc[i].size === item.size) {
+                found = true;
+                acc[i].quantity++;
+            }
+        }
+
+        if (!found) {
+            item.quantity = 1;
+            acc.push(item);
+        }
+        return acc;
+    }, []);
+};
 
 const Navbar = ({ location, history }) => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -65,28 +83,11 @@ const Navbar = ({ location, history }) => {
                 <NavbarDrawerCart
                     itemList={processReduceCartItems(itemList)}
                     onClickRemoveItemFromCart={handleRemoveItemFromCart}
+                    toggleDrawer={toggleDrawer}
                 />
             );
         }
         return;
-    };
-    const processReduceCartItems = (itemList) => {
-        return itemList.reduce((acc, item) => {
-            let found = false;
-
-            for (let i = 0; i < acc.length; i++) {
-                if (acc[i].name === item.name) {
-                    found = true;
-                    acc[i].count++;
-                }
-            }
-
-            if (!found) {
-                item.count = 1;
-                acc.push(item);
-            }
-            return acc;
-        }, []);
     };
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
@@ -204,4 +205,5 @@ const Navbar = ({ location, history }) => {
         </>
     );
 };
+
 export default withRouter(Navbar);

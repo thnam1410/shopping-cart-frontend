@@ -7,7 +7,7 @@ const cartReducer = (state = initialState, action) => {
         case "ADD_TO_CART": {
             const newList = [...state.list];
             newList.push(action.payload);
-
+            console.log(newList);
             return {
                 ...state,
                 list: newList,
