@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MenuIcon from "@material-ui/icons/Menu";
 import { useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -12,7 +12,7 @@ import {
     NavbarDrawerCart,
     NavbarDrawerSearchBar,
 } from "../NavbarDrawer/NavbarDrawer";
-import { removeItemFromCart } from "../../actions/cart";
+import { addMultipleItem, removeItemFromCart } from "../../actions/cart";
 import {
     AppBar,
     Toolbar,
@@ -28,25 +28,6 @@ const buttonMenu = [
     { title: "Product", url: "/product" },
     { title: "About", url: "/about" },
 ];
-export const processReduceCartItems = (itemList) => {
-    return itemList.reduce((acc, item) => {
-        let found = false;
-
-        for (let i = 0; i < acc.length; i++) {
-            if (acc[i].name === item.name && acc[i].size === item.size) {
-                found = true;
-                acc[i].quantity++;
-            }
-        }
-
-        if (!found) {
-            item.quantity = 1;
-            acc.push(item);
-        }
-        return acc;
-    }, []);
-};
-
 const Navbar = ({ location, history }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -55,10 +36,18 @@ const Navbar = ({ location, history }) => {
     const [currentDrawerClick, setCurrentDrawerClick] = useState(null);
     const itemList = useSelector((state) => state.cart.list);
     const dispatch = useDispatch();
-
     const [state, setState] = useState({
         right: false,
     });
+    useEffect(() => {
+        if (localStorage.getItem("data") !== null) {
+            const itemsFromLocalStorage = JSON.parse(
+                localStorage.getItem("data")
+            );
+            const action = addMultipleItem(itemsFromLocalStorage);
+            dispatch(action);
+        }
+    }, [dispatch]);
 
     const toggleDrawer = (anchor, open) => (event) => {
         if (
@@ -68,7 +57,6 @@ const Navbar = ({ location, history }) => {
         ) {
             return;
         }
-
         setState({ [anchor]: open });
     };
     const handleRemoveItemFromCart = (item) => {
@@ -81,7 +69,7 @@ const Navbar = ({ location, history }) => {
         } else if (currentDrawerClick === "cart") {
             return (
                 <NavbarDrawerCart
-                    itemList={processReduceCartItems(itemList)}
+                    itemList={itemList}
                     onClickRemoveItemFromCart={handleRemoveItemFromCart}
                     toggleDrawer={toggleDrawer}
                 />
@@ -89,6 +77,7 @@ const Navbar = ({ location, history }) => {
         }
         return;
     };
+    console.log(itemList);
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
     };

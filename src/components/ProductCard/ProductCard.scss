@@ -1,6 +1,10 @@
 .card {
-    max-width: 345 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 
+    min-height: 350px;
     &__header > div > span {
         font-size: 12px;
         font-weight: 500;

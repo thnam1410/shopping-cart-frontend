@@ -1,6 +1,6 @@
 .cart {
     border: 1px solid black;
-    margin-top: 10vh;
+    margin-top: 5vh;
     &__footer {
         display: flex;
         justify-content: center;
@@ -16,7 +16,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    flex-wrap: wrap;
+    // flex-wrap: wrap;
 
     position: relative;
     padding: 10px 20px;
@@ -50,6 +50,8 @@
     &__title {
         font-size: 20px;
         font-weight: 700;
+
+        width: 60%;
     }
     &__information {
         display: flex;
@@ -66,4 +68,18 @@
     font-size: 30px;
     font-weight: 700;
     padding: 20px;
+}
+
+.paymentfield {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    padding: 15px;
+
+    & .MuiSelect-select.MuiSelect-select {
+        padding: 15px 25px 15px 15px;
+        margin-right: 5px;
+    }
 }

@@ -30,6 +30,11 @@ export function NavbarDrawerCart({
             return (acc += price * quantity);
         }, 0);
     };
+    const handleCheckOut = () => {
+        toggleDrawer("right", false)();
+        history.push("/checkout");
+    };
+
     return (
         <div className="drawer">
             {/* Header */}
@@ -42,43 +47,47 @@ export function NavbarDrawerCart({
 
             {/* Body */}
             <div className="drawer__body">
-                {itemList.map((item, index) => {
-                    const { name, size, price, quantity, img } = item;
-                    return (
-                        <div className="cart__item" key={index}>
-                            <div className="item__avatar">
-                                <Avatar
-                                    alt="item"
-                                    src={`${process.env.REACT_APP_API_URL}${img}`}
-                                />
-                            </div>
-                            <div className="item__informations">
-                                <div className="item__informations-name">
-                                    {name}
+                {itemList
+                    .sort((a, b) =>
+                        a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+                    )
+                    .map((item, index) => {
+                        const { name, size, price, quantity, img } = item;
+                        return (
+                            <div className="cart__item" key={index}>
+                                <div className="item__avatar">
+                                    <Avatar
+                                        alt="item"
+                                        src={`${process.env.REACT_APP_API_URL}${img}`}
+                                    />
                                 </div>
-                                <div className="item__informations-size">
-                                    {size}
+                                <div className="item__informations">
+                                    <div className="item__informations-name">
+                                        {name}
+                                    </div>
+                                    <div className="item__informations-size">
+                                        {size}
+                                    </div>
+                                    <div className="item__informations-price">
+                                        <span className="item__count">
+                                            {quantity}
+                                        </span>
+                                        {price.toLocaleString("it-IT", {
+                                            style: "currency",
+                                            currency: "VND",
+                                        })}
+                                    </div>
                                 </div>
-                                <div className="item__informations-price">
-                                    <span className="item__count">
-                                        {quantity}
-                                    </span>
-                                    {price.toLocaleString("it-IT", {
-                                        style: "currency",
-                                        currency: "VND",
-                                    })}
+                                <div className="item__removebutton">
+                                    <CloseIcon
+                                        onClick={() => {
+                                            onClickRemoveItemFromCart(item);
+                                        }}
+                                    />
                                 </div>
                             </div>
-                            <div className="item__removebutton">
-                                <CloseIcon
-                                    onClick={() => {
-                                        onClickRemoveItemFromCart(item);
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    );
-                })}
+                        );
+                    })}
             </div>
 
             <Divider />
@@ -97,9 +106,7 @@ export function NavbarDrawerCart({
                     className="btn__checkout"
                     variant="outlined"
                     color="secondary"
-                    onClick={() => {
-                        history.push("/checkout");
-                    }}>
+                    onClick={handleCheckOut}>
                     Check Out
                 </Button>
             </div>

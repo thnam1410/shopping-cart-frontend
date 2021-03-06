@@ -5,9 +5,19 @@ const initialState = {
 const cartReducer = (state = initialState, action) => {
     switch (action.type) {
         case "ADD_TO_CART": {
-            const newList = [...state.list];
-            newList.push(action.payload);
-            console.log(newList);
+            let newList = [...state.list];
+            const newItem = action.payload;
+            let existedItem = newList.filter(
+                (x) => x.name === newItem.name && x.size == newItem.size
+            );
+
+            if (existedItem.length !== 0) {
+                existedItem[0].quantity += newItem.quantity;
+            } else {
+                newList.push(newItem);
+            }
+
+            localStorage.setItem("data", JSON.stringify(newList));
             return {
                 ...state,
                 list: newList,
@@ -16,14 +26,35 @@ const cartReducer = (state = initialState, action) => {
 
         case "REMOVE_FROM_CART": {
             const currentRemoveItem = action.payload;
-
-            const newList = [...state.list].filter(
-                (x) => x.name !== currentRemoveItem.name
+            let storeList = [...state.list];
+            const itemIndex = storeList.findIndex(
+                (item) =>
+                    item.name === currentRemoveItem.name &&
+                    item.size === currentRemoveItem.size
             );
-
+            storeList[itemIndex].quantity = storeList[itemIndex].quantity - 1;
+            if (storeList[itemIndex].quantity === 0) {
+                storeList.splice(itemIndex, 1);
+            }
+            localStorage.setItem("data", JSON.stringify(storeList));
             return {
                 ...state,
-                list: newList,
+                list: storeList,
+            };
+        }
+
+        case "ADD_MULTIPLE_ITEM_FROM_LOCALSTORAGE": {
+            const itemsFromLocalStorage = action.payload;
+            return {
+                ...state,
+                list: itemsFromLocalStorage,
+            };
+        }
+        case "REMOVE_ALL_ITEM": {
+            localStorage.removeItem("data");
+            return {
+                ...state,
+                list: [],
             };
         }
         default:

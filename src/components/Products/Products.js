@@ -13,8 +13,6 @@ import {
     Grid,
 } from "@material-ui/core";
 import ProductCard from "../ProductCard/ProductCard";
-import { useDispatch, useSelector } from "react-redux";
-import { addNewItemToCart } from "../../actions/cart";
 import { withRouter } from "react-router-dom";
 import axiosClient from "../../api/axiosClient";
 
@@ -31,14 +29,16 @@ function Products({ history }) {
     };
 
     const handleOnClickProduct = (name) => {
-        // history.push(`/product/${name.split(" ").join("-")}`);
         history.push(`/product/${name}`);
     };
 
     useEffect(() => {
-        axiosClient.get("/product").then((res) => {
-            setAllProductItems(res);
-        });
+        axiosClient
+            .get("/product")
+            .then((res) => {
+                setAllProductItems(res);
+            })
+            .catch(() => alert("Can not fetch data"));
     }, []);
     return (
         <div className="product">
@@ -125,7 +125,13 @@ function Products({ history }) {
                     <Container maxWidth="xl">
                         <Grid container spacing={6}>
                             {allProductItems.map((item, index) => {
-                                const { _id, name, price, mainImage, sizes } = item;
+                                const {
+                                    _id,
+                                    name,
+                                    price,
+                                    mainImage,
+                                    sizes,
+                                } = item;
                                 return (
                                     <Grid
                                         key={index}

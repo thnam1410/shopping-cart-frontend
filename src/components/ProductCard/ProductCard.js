@@ -27,7 +27,14 @@ function ProductCard({ image, name, price, onClick, sizes }) {
     return (
         <Card className="card" onClick={onClick}>
             <CardActionArea>
-                <CardHeader className="card__header" title={sizes.every(({quantity}) => parseInt(quantity) === 0) ? "Out Of Stock" :""} />
+                <CardHeader
+                    className="card__header"
+                    title={
+                        sizes.every(({ quantity }) => parseInt(quantity) === 0)
+                            ? "Out Of Stock"
+                            : ""
+                    }
+                />
                 <CardMedia
                     className="card__image"
                     image={image}
@@ -46,7 +53,7 @@ function ProductCard({ image, name, price, onClick, sizes }) {
                         align="center"
                         variant="subtitle1"
                         gutterBottom>
-                        {price}
+                        {price.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})}
                     </Typography>
                 </CardContent>
             </CardActionArea>
