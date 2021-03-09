@@ -20,7 +20,6 @@ function TransactionDetailsDialog({ transactionDetails, open, handleClose }) {
     const classes = useStyles();
 
     const handleSaveChanges = () => {
-        // console.log(transactionDetails);
         console.log(
             transactionStatus,
             transactionDetails._id,
