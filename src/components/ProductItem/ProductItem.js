@@ -33,7 +33,6 @@ function ProductItem({ history }) {
                 const firstAvailableSizeIndex = sortSizes.findIndex(
                     (x) => x.quantity !== 0
                 );
-                console.log(firstAvailableSizeIndex);
                 if (firstAvailableSizeIndex !== -1) {
                     setCurrentSizeChoose(
                         sortSizes[firstAvailableSizeIndex].size
@@ -66,13 +65,18 @@ function ProductItem({ history }) {
     };
     const checkOutOfStock = () => {
         const { sizes } = product;
+        console.log(product);
         const findSizeStock = sizes.filter(
             (x) => x.size == currentSizeChoose
         )[0];
         let currentItemQuantity = cart
-            .filter((x) => x.name === product.name)
+            .filter(
+                (x) => x.name === product.name && x.size == currentSizeChoose
+            )
             .reduce((total, { quantity }) => (total += quantity), 0);
+        // console.log(currentItemQuantity);
         const stockLeft = parseInt(findSizeStock.quantity);
+        // console.log(stockLeft);
         if (!currentItemQuantity && countItem > stockLeft) {
             return true;
         }

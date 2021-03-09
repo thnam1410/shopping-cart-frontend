@@ -77,7 +77,6 @@ const Navbar = ({ location, history }) => {
         }
         return;
     };
-    console.log(itemList);
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
     };

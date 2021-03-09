@@ -1,24 +1,19 @@
-import React, { Suspense } from "react";
-import Navbar from "../Navbar/Navbar";
-import "./ShoppingCart.scss";
-import {
-    BrowserRouter as Router,
-    Redirect,
-    Route,
-    Switch,
-} from "react-router-dom";
-import Homepage from "../Homepage/Homepage";
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import About from "../About/About";
-import NotFound from "../NotFound/NotFound";
-import Login from "../Login/Login";
-import AdminProduct from "../AdminPage/AdminProduct";
-import { AdminPage } from "../AdminPage/AdminPage";
-import { AdminAddProductReview } from "../AdminPage/AdminFormFields/AdminAddProductReview";
 import AdminAppBar from "../AdminPage/AdminAppBar";
-import Products from "../Products/Products";
-import ProductItem from "../ProductItem/ProductItem";
+import { AdminAddProductReview } from "../AdminPage/AdminFormFields/AdminAddProductReview";
+import { AdminPage } from "../AdminPage/AdminPage";
+import AdminProduct from "../AdminPage/AdminProduct";
 import CheckOut from "../CheckOut/CheckOut";
 import { CheckOutReview } from "../CheckOutReview/CheckOutReview";
+import Homepage from "../Homepage/Homepage";
+import Login from "../Login/Login";
+import Navbar from "../Navbar/Navbar";
+import NotFound from "../NotFound/NotFound";
+import ProductItem from "../ProductItem/ProductItem";
+import Products from "../Products/Products";
+import "./ShoppingCart.scss";
 
 function ShoppingCart() {
     return (
@@ -39,6 +34,12 @@ function ShoppingCart() {
                         path="/admin/product/review"
                         component={AdminAddProductReview}
                     />
+                    {/* <Route
+                        exact
+                        path="/admin/view-products"
+                        component={AdminViewProduct}
+                    /> */}
+
                     <Route exact path="/" component={Homepage} />
                     <Route exact path="/about" component={About} />
                     <Route exact path="/checkout" component={CheckOut} />
@@ -48,6 +49,7 @@ function ShoppingCart() {
                         component={CheckOutReview}
                     />
                     <Route exact path="/product" component={Products} />
+
                     <Route path="/product/:productId" component={ProductItem} />
 
                     <Route component={NotFound} />

@@ -102,10 +102,18 @@ function AdminPage({ history }) {
             price: data.productPrice,
             sizes: JSON.stringify(data.sizes),
             category: data.category.split(","),
-            tags: data.tags.split(","),
+            tags: data.tags
+                .replace(/\s+/g, "")
+                .split(",")
+                .map((x) => {
+                    const result = x.toLowerCase();
+                    return result.charAt(0).toUpperCase() + result.slice(1);
+                })
+                .filter((x) => x !== ""),
             mainImage: mainImages[0]?.file,
             subImages: [...subImages].map((obj) => obj.file),
         };
+        console.log(uploadData);
         const formData = Object.keys(uploadData).reduce((formData, key) => {
             // Convert all array value into form data format
             if (Array.isArray(uploadData[key])) {

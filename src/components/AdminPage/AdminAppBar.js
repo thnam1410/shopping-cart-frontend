@@ -24,7 +24,11 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
     },
 }));
-const buttonMenu = [{ title: "Add Products", url: "/admin/product" }];
+const buttonMenu = [
+    { title: "Transactions", url: "/admin" },
+    { title: "Add Products", url: "/admin/product" },
+    { title: "View Products", url: "/admin/view-products" },
+];
 
 const AdminAppBar = ({ history, location }) => {
     const [anchorEl, setAnchorEl] = useState(null);
