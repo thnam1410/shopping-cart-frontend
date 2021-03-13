@@ -15,16 +15,34 @@ import {
     FormControl,
 } from "@material-ui/core";
 import { Input } from "./AdminFormFields/Input";
-function TransactionDetailsDialog({ transactionDetails, open, handleClose }) {
+import axiosClient from "../../api/axiosClient";
+
+function TransactionDetailsDialog({
+    transactionDetails,
+    open,
+    handleClose,
+    changeTransactionState,
+}) {
     const [transactionStatus, setTransactionStatus] = useState(null);
     const classes = useStyles();
 
     const handleSaveChanges = () => {
-        console.log(
-            transactionStatus,
-            transactionDetails._id,
-            transactionDetails.customerName
-        );
+        const status = transactionStatus;
+        axiosClient
+            .post("/api/transaction-status", {
+                _id: transactionDetails._id,
+                status,
+            })
+            .then((res) => {
+                alert("Change Status Successfully");
+                handleClose();
+                changeTransactionState(transactionDetails._id, status);
+            })
+            .catch((err) => {
+                console.log(err);
+                alert("Something error ! Can not change status");
+                handleClose();
+            });
     };
     const handleChangeStatus = (e) => {
         setTransactionStatus(e.target.value);
@@ -36,6 +54,9 @@ function TransactionDetailsDialog({ transactionDetails, open, handleClose }) {
         <Dialog
             open={open}
             onClose={handleClose}
+            onExited={() => {
+                setTransactionStatus(transactionDetails.status);
+            }}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
             maxWidth="sm">
@@ -48,58 +69,60 @@ function TransactionDetailsDialog({ transactionDetails, open, handleClose }) {
                 <Typography variant="h6" color="secondary">
                     Customer Informations
                 </Typography>
-                {/* Customer Name */}
-                {transactionDetails?.customer && (
-                    <DialogTextField
-                        id="name"
-                        label="Customer Name"
-                        defaultValue={transactionDetails?.customer?.fullName}
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                        fullWidth
-                        variant="outlined"
-                    />
-                )}
-                {/* Customer Address */}
-                {transactionDetails?.customer && (
-                    <DialogTextField
-                        id="address"
-                        label="Customer Address"
-                        defaultValue={transactionDetails?.customer.address}
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                        fullWidth
-                        variant="outlined"
-                    />
-                )}
-                {/* Customer Email */}
-                {transactionDetails?.customer && (
-                    <DialogTextField
-                        id="email"
-                        label="Customer Email"
-                        defaultValue={transactionDetails?.customer.email}
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                        fullWidth
-                        variant="outlined"
-                    />
-                )}
-                {/* Payment Method */}
-                {transactionDetails?.customer && (
-                    <DialogTextField
-                        id="paymentMethod"
-                        label="Payment Method"
-                        defaultValue={transactionDetails?.paymentMethod}
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                        fullWidth
-                        variant="outlined"
-                    />
-                )}
+                <div className={classes.informationWrapper}>
+                    {/* Customer Name */}
+                    {transactionDetails.customerName && (
+                        <DialogTextField
+                            id="name"
+                            label="Customer Name"
+                            defaultValue={transactionDetails.customerName}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            variant="outlined"
+                            margin="dense"
+                        />
+                    )}
+                    {/* Customer Address */}
+                    {transactionDetails.address && (
+                        <DialogTextField
+                            id="address"
+                            label="Customer Address"
+                            defaultValue={transactionDetails.address}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            variant="outlined"
+                            margin="dense"
+                        />
+                    )}
+                    {/* Customer Email */}
+                    {transactionDetails.email && (
+                        <DialogTextField
+                            id="email"
+                            label="Customer Email"
+                            defaultValue={transactionDetails.email}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            variant="outlined"
+                            margin="dense"
+                        />
+                    )}
+                    {/* Payment Method */}
+                    {transactionDetails.paymentMethod && (
+                        <DialogTextField
+                            id="paymentMethod"
+                            label="Payment Method"
+                            defaultValue={transactionDetails.paymentMethod}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            variant="outlined"
+                            margin="dense"
+                        />
+                    )}
+                </div>
                 {/* Transaction Products */}
                 {transactionDetails?.products.map((product, index) => {
                     const { name, size, price, quantity } = product;
@@ -133,19 +156,25 @@ function TransactionDetailsDialog({ transactionDetails, open, handleClose }) {
                 <div className={classes.totalPrice}>
                     Total: <h3>{transactionDetails?.totalPrice}</h3>
                 </div>
-                <FormControl>
-                    <Input
-                        select
-                        label="Status"
-                        onChange={handleChangeStatus}
-                        value={transactionStatus ?? transactionDetails.status}>
-                        <MenuItem value="Submitted">Submitted</MenuItem>
-                        <MenuItem value="Cancelled">Cancelled</MenuItem>
-                        <MenuItem value="Pending">Pending</MenuItem>
-                        <MenuItem value="Shipping">Shipping</MenuItem>
-                        <MenuItem value="Done">Done</MenuItem>
-                    </Input>
-                </FormControl>
+                <div className={classes.informationWrapper}>
+                    <FormControl style={{ width: "50%" }}>
+                        <Input
+                            select
+                            label="Status"
+                            variant="outlined"
+                            margin="normal"
+                            onChange={handleChangeStatus}
+                            value={
+                                transactionStatus ?? transactionDetails.status
+                            }>
+                            <MenuItem value="Submitted">Submitted</MenuItem>
+                            <MenuItem value="Cancelled">Cancelled</MenuItem>
+                            <MenuItem value="Pending">Pending</MenuItem>
+                            <MenuItem value="Shipping">Shipping</MenuItem>
+                            <MenuItem value="Done">Done</MenuItem>
+                        </Input>
+                    </FormControl>
+                </div>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">
@@ -184,6 +213,18 @@ const useStyles = makeStyles((theme) => ({
     productInfor__right: {
         padding: "5px 0 5px 20px",
     },
+    informationWrapper: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexWrap: "wrap",
+    },
+    DialogTextField: {
+        margin: "5px",
+    },
+    form: {
+        margin: "auto",
+    },
     "@global": {
         "div > p > b": {
             marginLeft: "3px",
@@ -192,6 +233,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 const DialogTextField = withStyles((theme) => ({
     root: {
-        marginTop: "5px;",
+        margin: "5px",
     },
 }))(TextField);

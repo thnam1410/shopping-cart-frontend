@@ -36,6 +36,7 @@ function Products({ history }) {
         axiosClient
             .get("/product")
             .then((res) => {
+                console.log(res);
                 setAllProductItems(res);
             })
             .catch(() => alert("Can not fetch data"));

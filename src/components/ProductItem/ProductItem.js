@@ -28,6 +28,7 @@ function ProductItem({ history }) {
                     .catch((err) => {
                         throw err;
                     });
+
                 setProduct(data);
                 const sortSizes = data.sizes.sort((a, b) => a.size - b.size);
                 const firstAvailableSizeIndex = sortSizes.findIndex(

@@ -19,6 +19,9 @@ const tableColumns = [
     { id: "orderNo", label: "No.", minWidth: 50 },
     { id: "customerName", label: "Customer Name", minWidth: 100 },
     { id: "phoneNumber", label: "Phone Number", minWidth: 100 },
+    { id: "address", label: "Address", minWidth: 200 },
+    { id: "email", label: "Email", minWidth: 100 },
+    { id: "products", label: "Products", minWidth: 400 },
     {
         id: "totalPrice",
         label: "Total Price",
@@ -29,7 +32,6 @@ const tableColumns = [
                 currency: "VND",
             }),
     },
-    { id: "products", label: "Products", minWidth: 400 },
     { id: "paymentMethod", label: "Payment Method", minWidth: 100 },
     {
         id: "createdAt",
@@ -62,7 +64,6 @@ export const AdminPage = () => {
     const [currentTransactionClick, setCurrentTransactionClick] = useState(
         null
     );
-    // const [transactionDetails, setTransactionDetails] = useState(null);
     useEffect(() => {
         axiosClient
             .get("/api/transaction", {
@@ -88,6 +89,8 @@ export const AdminPage = () => {
                         _id,
                         customerName: customer.fullName,
                         phoneNumber: customer.phoneNumber,
+                        email: customer.email,
+                        address: customer.address,
                         totalPrice,
                         products,
                         paymentMethod,
@@ -101,22 +104,6 @@ export const AdminPage = () => {
             })
             .catch((err) => console.log(err));
     }, [page, rowsPerPage]);
-
-    // useEffect(() => {
-    //     const getTransactionDetails = async () => {
-    //         const transactionDetails = await axiosClient.get(
-    //             "/api/transaction-detail",
-    //             {
-    //                 params: {
-    //                     productId: currentTransactionClick,
-    //                 },
-    //             }
-    //         );
-
-    //         setTransactionDetails(transactionDetails);
-    //     };
-    //     if (currentTransactionClick) getTransactionDetails();
-    // }, [currentTransactionClick]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -147,6 +134,15 @@ export const AdminPage = () => {
         const transaction = transactions.filter((x) => x._id === id)[0];
         setCurrentTransactionClick(transaction);
         setOpenDialog(true);
+    };
+    const handleChangeTransactionState = (id, status) => {
+        let newTransactions = [...transactions];
+        newTransactions.forEach((obj) => {
+            if (obj._id === id) {
+                obj.status = status;
+            }
+        });
+        setTransactions(newTransactions);
     };
     return (
         <>
@@ -241,6 +237,7 @@ export const AdminPage = () => {
                     open={openDialog}
                     handleClose={() => setOpenDialog(false)}
                     transactionDetails={currentTransactionClick}
+                    changeTransactionState={handleChangeTransactionState}
                 />
             )}
         </>

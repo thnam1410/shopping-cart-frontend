@@ -13,6 +13,7 @@ import Navbar from "../Navbar/Navbar";
 import NotFound from "../NotFound/NotFound";
 import ProductItem from "../ProductItem/ProductItem";
 import Products from "../Products/Products";
+import AdminManageProducts from "../AdminPage/AdminManageProducts";
 import "./ShoppingCart.scss";
 
 function ShoppingCart() {
@@ -34,11 +35,11 @@ function ShoppingCart() {
                         path="/admin/product/review"
                         component={AdminAddProductReview}
                     />
-                    {/* <Route
+                    <Route
                         exact
                         path="/admin/view-products"
-                        component={AdminViewProduct}
-                    /> */}
+                        component={AdminManageProducts}
+                    />
 
                     <Route exact path="/" component={Homepage} />
                     <Route exact path="/about" component={About} />
